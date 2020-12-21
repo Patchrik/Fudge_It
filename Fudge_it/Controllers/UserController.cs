@@ -1,10 +1,14 @@
 ﻿using Fudge_it.Models;
+using Fudge_it.Models.ViewModels;
 using Fudge_it.Repositories;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Fudge_it.Controllers
@@ -94,6 +98,35 @@ namespace Fudge_it.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult Login() {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> Login(LoginViewModel viewModel) 
+        {
+            User user = _userRepo.GetUserByEmail(viewModel.email);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new Claim(ClaimTypes.Email, user.email),
+                new Claim(ClaimTypes.Role, "User"),
+            };
+
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+            //this is just a placeholder at the moment we will need to redirect the logged in user to their dash board from the login screen.
+            return RedirectToAction("Index");
         }
     }
 }

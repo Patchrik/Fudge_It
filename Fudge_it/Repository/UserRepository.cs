@@ -99,5 +99,44 @@ namespace Fudge_it.Repositories
                 }
             }
         }
+
+        public User GetUserByEmail(string email)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT id, firstName, lastName, email, hhId FROM [User]
+                        WHERE email = @email;
+                    ";
+
+                    cmd.Parameters.AddWithValue("@email", email);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        User user = new User
+                        {
+                            id = reader.GetInt32(reader.GetOrdinal("id")),
+                            firstName = reader.GetString(reader.GetOrdinal("firstName")),
+                            lastName = reader.GetString(reader.GetOrdinal("lastName")),
+                            email = reader.GetString(reader.GetOrdinal("email")),
+                            hhId = reader.GetInt32(reader.GetOrdinal("hhId"))
+                        };
+
+                        reader.Close();
+                        return user;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return null;
+                    }
+                }
+            }
+        }
     }
 }
