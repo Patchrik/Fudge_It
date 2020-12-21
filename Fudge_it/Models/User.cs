@@ -7,13 +7,13 @@ namespace Fudge_it.Models
 {
     public class User
     {
-        int id { get; set; }
-        string firstName { get; set; }
-        string lastName { get; set; }
-        string email { get; set; }
-        int hhId { get; set; }
+        public int id { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string email { get; set; }
+        public int hhId { get; set; }
 
-        string fullName {
+        public string fullName {
             get {
                 return firstName + lastName;
             }
