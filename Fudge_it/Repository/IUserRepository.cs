@@ -7,5 +7,7 @@ namespace Fudge_it.Repositories
     {
         List<User> GetAllUsers();
         User GetUserById(int id);
+
+        User GetUserByEmail(string email);
     }
 }

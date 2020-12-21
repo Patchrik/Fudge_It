@@ -15,7 +15,7 @@ namespace Fudge_it.Models
 
         public string fullName {
             get {
-                return firstName + lastName;
+                return firstName + " " + lastName;
             }
         }
 
