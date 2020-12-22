@@ -16,19 +16,40 @@ namespace Fudge_it.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepo;
+        private readonly IExpenseRepository _expenseRepo;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepo, IExpenseRepository expenseRepo)
         {
-            _userRepo = userRepository;
+            _userRepo = userRepo;
+            _expenseRepo = expenseRepo;
+        }
+
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
 
 
         // GET: UserController
         public ActionResult Index()
         {
-            List<User> users = _userRepo.GetAllUsers();
+            User user = _userRepo.GetUserById(GetCurrentUserId());
+            List<Expense> expenses = _expenseRepo.GetAllExpensesByUserId(user.id);
 
-            return View(users);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                DashboardViewModel vm = new DashboardViewModel()
+                {
+                    User = user,
+                    Expenses = expenses
+                };
+                return View(vm);
+            }
         }
 
         // GET: UserController/Details/5

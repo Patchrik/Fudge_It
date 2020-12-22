@@ -27,6 +27,7 @@ namespace Fudge_it
         {
             services.AddControllersWithViews();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IExpenseRepository, ExpenseRepository>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/User/LogIn");
         }
 
