@@ -7,12 +7,12 @@ namespace Fudge_it.Models
 {
     public class Expense
     {
-        int id { get; set; }
-        string name { get; set; }
-        double amount { get; set; }
-        int userId { get; set; }
-        int recurring { get; set; }
-        int hhId { get; set; }
-        int hhExpense { get; set; }
+       public int id { get; set; }
+       public string name { get; set; }
+       public double amount { get; set; }
+       public int userId { get; set; }
+       public bool recurring { get; set; }
+       public int hhId { get; set; }
+       public bool hhExpense { get; set; }
     }
 }
