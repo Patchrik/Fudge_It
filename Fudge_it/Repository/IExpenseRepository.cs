@@ -8,5 +8,7 @@ namespace Fudge_it.Repositories
         List<Expense> GetAllExpensesByUserId(int id);
 
         Expense GetExpenseById(int id);
+
+        void AddExpense(Expense expense);
     }
 }

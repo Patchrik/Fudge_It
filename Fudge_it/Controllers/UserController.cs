@@ -30,6 +30,12 @@ namespace Fudge_it.Controllers
             return int.Parse(id);
         }
 
+        private int GetCurrentUserHHid()
+        {
+            string id = User.FindFirstValue(ClaimTypes.UserData);
+            return int.Parse(id);
+        }
+
 
         // GET: UserController
         public ActionResult Index()
@@ -67,15 +73,18 @@ namespace Fudge_it.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Expense expense)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                expense.userId = GetCurrentUserId();
+                expense.hhId = GetCurrentUserHHid();
+                _expenseRepo.AddExpense(expense);
+                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return View(expense);
             }
         }
 
@@ -137,6 +146,7 @@ namespace Fudge_it.Controllers
             List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new Claim(ClaimTypes.UserData, user.hhId.ToString()),
                 new Claim(ClaimTypes.Email, user.email),
                 new Claim(ClaimTypes.Role, "User"),
             };

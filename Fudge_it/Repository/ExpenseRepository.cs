@@ -123,6 +123,8 @@ namespace Fudge_it.Repositories
                     cmd.Parameters.AddWithValue("@recurring", expense.recurring);
                     cmd.Parameters.AddWithValue("@hhId", expense.hhId);
                     cmd.Parameters.AddWithValue("@hhExpense", expense.hhExpense);
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
