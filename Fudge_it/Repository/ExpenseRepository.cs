@@ -145,7 +145,7 @@ namespace Fudge_it.Repositories
                                         recurring = @recurring, 
                                         hhId = @hhId,
                                         hhExpense = @hhExpense
-                                        WHERE Id = @id;
+                                        WHERE id = @id;
 
                     ";
                     cmd.Parameters.AddWithValue("@name", expense.name);
@@ -155,6 +155,22 @@ namespace Fudge_it.Repositories
                     cmd.Parameters.AddWithValue("@hhId", expense.hhId);
                     cmd.Parameters.AddWithValue("@hhExpense", expense.hhExpense);
                     cmd.Parameters.AddWithValue("@id", expense.id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public void DeleteExpense(int expenseId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM Expense WHERE id = @id";
+
+                    cmd.Parameters.AddWithValue("@id", expenseId);
 
                     cmd.ExecuteNonQuery();
                 }
