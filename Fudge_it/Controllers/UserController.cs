@@ -80,7 +80,7 @@ namespace Fudge_it.Controllers
                 expense.userId = GetCurrentUserId();
                 expense.hhId = GetCurrentUserHHid();
                 _expenseRepo.AddExpense(expense);
-                return RedirectToAction("Index");
+                return RedirectToAction("Dashboard");
             }
             catch
             {
@@ -91,21 +91,30 @@ namespace Fudge_it.Controllers
         // GET: UserController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Expense expense = _expenseRepo.GetExpenseById(id);
+
+            if (expense == null)
+            {
+                return NotFound();
+            }
+            return View(expense);
         }
 
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Expense expense)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                expense.userId = GetCurrentUserId();
+                expense.hhId = GetCurrentUserHHid();
+                _expenseRepo.UpdateExpense(expense);
+                return RedirectToAction("Dashboard");
             }
             catch
             {
-                return View();
+                return View(expense);
             }
         }
 
