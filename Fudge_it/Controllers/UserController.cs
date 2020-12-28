@@ -38,7 +38,7 @@ namespace Fudge_it.Controllers
 
 
         // GET: UserController
-        public ActionResult Index()
+        public ActionResult Dashboard()
         {
             User user = _userRepo.GetUserById(GetCurrentUserId());
             List<Expense> expenses = _expenseRepo.GetAllExpensesByUserId(user.id);
@@ -157,7 +157,7 @@ namespace Fudge_it.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
             //this is just a placeholder at the moment we will need to redirect the logged in user to their dash board from the login screen.
-            return RedirectToAction("Index");
+            return RedirectToAction("Dashboard");
         }
     }
 }
