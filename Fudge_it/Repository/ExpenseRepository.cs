@@ -128,5 +128,37 @@ namespace Fudge_it.Repositories
                 }
             }
         }
+
+        public void UpdateExpense(Expense expense) 
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"UPDATE Expense
+                                        SET 
+                                        [name] = @name, 
+                                        amount = @amount, 
+                                        userId = @userId, 
+                                        recurring = @recurring, 
+                                        hhId = @hhId,
+                                        hhExpense = @hhExpense
+                                        WHERE Id = @id;
+
+                    ";
+                    cmd.Parameters.AddWithValue("@name", expense.name);
+                    cmd.Parameters.AddWithValue("@amount", expense.amount);
+                    cmd.Parameters.AddWithValue("@userId", expense.userId);
+                    cmd.Parameters.AddWithValue("@recurring", expense.recurring);
+                    cmd.Parameters.AddWithValue("@hhId", expense.hhId);
+                    cmd.Parameters.AddWithValue("@hhExpense", expense.hhExpense);
+                    cmd.Parameters.AddWithValue("@id", expense.id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
