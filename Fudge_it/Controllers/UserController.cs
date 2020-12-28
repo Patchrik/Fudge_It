@@ -121,21 +121,24 @@ namespace Fudge_it.Controllers
         // GET: UserController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Expense expense = _expenseRepo.GetExpenseById(id);
+            return View(expense);
         }
 
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Expense expense)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                _expenseRepo.DeleteExpense(id);
+
+                return RedirectToAction("Dashboard");
             }
             catch
             {
-                return View();
+                return View(expense);
             }
         }
 

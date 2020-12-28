@@ -12,5 +12,7 @@ namespace Fudge_it.Repositories
         void AddExpense(Expense expense);
 
         void UpdateExpense(Expense expense);
+
+        void DeleteExpense(int expenseId);
     }
 }
