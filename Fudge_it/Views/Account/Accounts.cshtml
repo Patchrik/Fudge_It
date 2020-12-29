@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Fudge_it.Models.Account>
+
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+<h1>Accounts</h1>
+
+<p>
+    <a asp-action="Create"><button type="button" class="btn btn-primary">Add New Account</button></a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Account Name</th>
+            <th scope="col">Account Balance</th>
+            <th scope="col">Account Type</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.name
+            </td>
+            <td>
+                @item.balance
+            </td>
+            <td>
+                @item.type
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

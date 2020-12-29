@@ -1,23 +1,26 @@
-﻿using Fudge_it.Repositories;
+﻿using Fudge_it.Models;
+using Fudge_it.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Fudge_it.Models;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Fudge_it.Controllers
 {
-    public class ExpenseController : Controller
+    public class AccountController : Controller
     {
         private readonly IUserRepository _userRepo;
         private readonly IExpenseRepository _expenseRepo;
-        public ExpenseController(IExpenseRepository expenseRepo, IUserRepository userRepo) 
+        private readonly IAccountRepository _accountRepo;
+
+        public AccountController(IExpenseRepository expenseRepo, IUserRepository userRepo, IAccountRepository accountRepo)
         {
             _userRepo = userRepo;
             _expenseRepo = expenseRepo;
+            _accountRepo = accountRepo;
         }
 
         private int GetCurrentUserId()
@@ -32,48 +35,51 @@ namespace Fudge_it.Controllers
             return int.Parse(id);
         }
 
-        // GET: ExpenseController
-        public ActionResult Expenses()
+        // GET: AccountController
+        public ActionResult Accounts()
         {
             User user = _userRepo.GetUserById(GetCurrentUserId());
-            List<Expense> expenses = _expenseRepo.GetAllExpensesByUserId(user.id);
-            return View(expenses);
+            List<Account> accounts = _accountRepo.GetAllAccountsByUserId(user.id);
+            return View(accounts);
         }
 
-        // GET: ExpenseController/Details/5
+        // GET: AccountController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ExpenseController/Create
+        // GET: AccountController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ExpenseController/Create
+        // POST: AccountController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Account account)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                account.userId = GetCurrentUserId();
+                account.hhId = GetCurrentUserHHid();
+                _accountRepo.AddAccount(account);
+                return RedirectToAction("Accounts");
             }
             catch
             {
-                return View();
+                return View(account);
             }
         }
 
-        // GET: ExpenseController/Edit/5
+        // GET: AccountController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ExpenseController/Edit/5
+        // POST: AccountController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -88,13 +94,13 @@ namespace Fudge_it.Controllers
             }
         }
 
-        // GET: ExpenseController/Delete/5
+        // GET: AccountController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ExpenseController/Delete/5
+        // POST: AccountController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
