@@ -1,18 +1,43 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Fudge_it.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Fudge_it.Models;
+using System.Security.Claims;
 
 namespace Fudge_it.Controllers
 {
     public class ExpenseController : Controller
     {
-        // GET: ExpenseController
-        public ActionResult Index()
+        private readonly IUserRepository _userRepo;
+        private readonly IExpenseRepository _expenseRepo;
+        public ExpenseController(IExpenseRepository expenseRepo, IUserRepository userRepo) 
         {
-            return View();
+            _userRepo = userRepo;
+            _expenseRepo = expenseRepo;
+        }
+
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
+
+        private int GetCurrentUserHHid()
+        {
+            string id = User.FindFirstValue(ClaimTypes.UserData);
+            return int.Parse(id);
+        }
+
+        // GET: ExpenseController
+        public ActionResult Expense()
+        {
+            User user = _userRepo.GetUserById(GetCurrentUserId());
+            List<Expense> expenses = _expenseRepo.GetAllExpensesByUserId(user.id);
+            return View(expenses);
         }
 
         // GET: ExpenseController/Details/5
